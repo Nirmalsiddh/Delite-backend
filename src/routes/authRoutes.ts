@@ -19,7 +19,7 @@ router.get(
   (req, res) => {
     const user = req.user as any;
     const token = generateToken(user._id.toString(), user.username, user.email);
-    res.redirect(`http://localhost:3000/dashboard?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard?token=${token}`);
   }
 );
 export default router;

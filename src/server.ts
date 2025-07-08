@@ -16,7 +16,7 @@ const app = express();
 //   credentials: true
 // }));
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://delite-frontend-4i9n8b4sa-nirmal-siddhs-projects.vercel.app/'],
+  origin: ['http://localhost:3000', `${process.env.FRONTEND_URL}`],
   credentials: true,
 }));
 app.use(express.json());
