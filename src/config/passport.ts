@@ -14,30 +14,33 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        // Check if user exists by googleId
         let user = await User.findOne({ googleId: profile.id });
 
         if (!user) {
+          // Check if user exists by email
           const existingUser = await User.findOne({ email: profile.emails?.[0].value });
+
           if (existingUser) {
+            // Update existing user's googleId
             existingUser.googleId = profile.id;
             await existingUser.save();
             user = existingUser;
           } else {
+            const generatedUsername =
+              profile.displayName ||
+              profile.emails?.[0].value.split('@')[0] ||
+              `user_${Math.floor(Math.random() * 100000)}`; // final fallback
+
             user = await User.create({
               googleId: profile.id,
               email: profile.emails?.[0].value,
-              username: profile.displayName || 'GoogleUser',
+              username: generatedUsername,
             });
           }
         }
 
-        // Instead of passing user object, pass a lightweight payload
-        return done(null, {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-        });
-
+        return done(null, user);
       } catch (err) {
         return done(err as Error, false);
       }
