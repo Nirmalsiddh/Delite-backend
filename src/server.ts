@@ -15,10 +15,20 @@ const app = express();
 //   origin: 'http://localhost:3000',
 //   credentials: true
 // }));
+// app.use(cors({
+//   origin: ['http://localhost:3000', `${process.env.FRONTEND_URL}`],
+//   credentials: true,
+// }));
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean) as (string | boolean | RegExp)[];
+
 app.use(cors({
-  origin: ['http://localhost:3000', `${process.env.FRONTEND_URL}`],
+  origin: allowedOrigins,
   credentials: true,
 }));
+
 app.use(express.json());
 
 // connect to DB
