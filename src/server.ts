@@ -19,10 +19,13 @@ const app = express();
 //   origin: ['http://localhost:3000', `${process.env.FRONTEND_URL}`],
 //   credentials: true,
 // }));
-const allowedOrigins = [
-  'http://localhost:3000',
-  process.env.FRONTEND_URL,
-].filter(Boolean) as (string | boolean | RegExp)[];
+const allowedOrigins: (string | boolean | RegExp)[] = [];
+
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
+allowedOrigins.push('http://localhost:3000');
 
 app.use(cors({
   origin: allowedOrigins,
